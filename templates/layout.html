@@ -49,9 +49,15 @@
                             </ul>
                         </li>-->
                     </ul>
-                    <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
-                    </ul>
+                    {% if request.endpoint == 'profile' %}
+                        <ul class="navbar-nav ml-auto mt-2">
+                            <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                        </ul>
+                    {% else %}
+                        <ul class="navbar-nav ml-auto mt-2">
+                            <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
+                        </ul>
+                    {% endif %}
                 {% else %}
                     <ul class="navbar-nav ml-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>

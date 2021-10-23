@@ -2,15 +2,26 @@ from flask import Flask, render_template, redirect, session, request
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
+from random import randint
 import sqlite3
 
 from helpers import login_required, error
+from operations import *
 
 # Configure application
 app = Flask(__name__)
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# Ensure responses aren't cached
+# code snippet taken from CS50's Finance Problem
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -34,7 +45,7 @@ def index():
 def login():
     """ Logs the user in """
 
-    # user submitted the log in form
+    # user submitted the log in form 
     if request.method == "POST":
         # clear any session that may exist
         session.clear()
@@ -57,6 +68,7 @@ def login():
 
         # user exists, log them in
         session["user_id"] = user_id
+        session["username"] = username
 
         return redirect("/")
 
@@ -95,14 +107,16 @@ def register():
         # getting additional information
         school = request.form.get("school") or "No information"
         kindergarten = "Kindergarten" if request.form.get(
-            "kindergarten") else -1
+            "kindergarten") else "No information"
+        print(kindergarten)
         grade = request.form.get("grade") or kindergarten
         birthday = request.form.get("birthday") or "No information"
         disabled = request.form.get("disabled")
+        print(disabled)
 
         # submitting the values into the database
         db.execute("INSERT INTO users (username, email, password, birthday, "
-                   "school, grade, disabled) VALUES (?, ?, ?, ?, ?, ?);",
+                   "school, grade, disabled) VALUES (?, ?, ?, ?, ?, ?, ?);",
                    (username, email, generate_password_hash(password), birthday,
                     school, grade, disabled))
         # saving the changes
@@ -110,9 +124,84 @@ def register():
 
         # log the user in
         session["user_id"] = db.lastrowid
+        session["username"] = username
 
         # user is registered, redirect them into the index page
         return redirect("/")
 
     # user clicked on the register button
     return render_template("register.html")
+
+
+@app.route("/profile")
+@login_required
+def profile():
+    """ Shows the user their profile page """
+
+    # get the users data
+    user_info = db.execute("SELECT * FROM users WHERE id = ?",
+                           (session['user_id'],)).fetchone()
+
+    print(user_info)
+
+    return render_template("profile.html", user=user_info)
+
+@app.route("/logout")
+@login_required
+def logout():
+    """ Logs the user out """
+    session.clear()
+    return redirect("/")
+
+
+# Here on out the web app gains functionality
+
+combo = {}
+
+
+@app.route("/addition")
+@login_required
+def addition():
+    """ The addition operation mode """
+    return add(combo.get('add', -1))
+
+
+@app.route("/subtraction")
+@login_required
+def subtraction():
+    """ The subtraction operation mode """
+    return subt(combo.get('subt', -1))
+
+
+@app.route("/multiplication")
+@login_required
+def multiplication():
+    """ The multiplication operation mode """
+    return mult(combo.get('mult', -1))
+
+
+@app.route("/division")
+@login_required
+def division():
+    """ The division operation mode """
+    return divd(combo.get('divd', -1))
+
+
+@app.route("/evaluate", methods=["POST"])
+@login_required
+def evaluate():
+    answer = int(request.form.get('answer'))
+    operation = request.form.get('operation')
+    
+    compare, route = actual_answer.pop()
+    print(compare, route)
+        
+    if answer == compare:
+        combo[operation] = combo.get(operation, 0) + 1
+    else:
+        combo[operation] = 0
+        
+    print(combo.get(operation))
+        
+    return redirect(route)
+        
