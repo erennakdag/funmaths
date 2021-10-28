@@ -1,0 +1,95 @@
+#symbols {
+    position: relative;
+    left: 280px;
+}
+
+.symbol {
+    border-radius: 20%;
+}
+
+#plus {
+    margin-top: 100px;
+}
+
+.plus {
+    width: 200px;
+    height: 50px;
+    background-color: aquamarine;
+}
+
+.plus.hor {
+    position: relative;
+    top: -50px;
+    transform: rotate(-10deg);
+}
+
+.plus.vert {
+    transform: rotate(80deg);
+}
+
+#minus {
+    position: relative;
+    left: 270px;
+    top: -100px;
+}
+
+.minus.vert {
+    width: 200px;
+    height: 50px;
+    background-color: yellow;
+    transform: rotate(15deg);
+}
+
+#cross{
+    margin-top: 100px;
+}
+
+.cross {
+    width: 200px;
+    height: 50px;
+    background-color: red;
+}
+
+.cross.right {
+    transform: rotate(300deg);
+}
+
+.cross.left {
+    transform: rotate(30deg);
+    position: relative;
+    top: -49px;
+}
+
+#division {
+    position: relative;
+    left: 270px;
+    top: -200px;
+}
+
+.division {
+    background-color: mediumpurple;
+    transform: rotate(25deg);
+}
+
+.division.circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: relative;
+    
+}
+
+.division.middle {
+    width: 200px;
+    height: 50px;
+}
+
+.division.up {
+    top: 40px;
+    left: 95px;
+}
+
+.division.down {
+    top: 110px;
+    left: 50px;
+}
