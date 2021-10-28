@@ -1,0 +1,19 @@
+{% extends "operations.html" %}
+
+{% block style %}
+    #main-div {
+        height: 630px;
+    }
+{% endblock %}
+
+{% block remainder %}
+
+    <p style="font-weight: bold; font-size: 5em;"> % </p>
+
+{% endblock %}
+
+{% block input %}
+    <input autofocus required name="answer" type="number" max="1998" style="width: 250px; background: transparent; border: none; outline: none; position: relative; left: 100px; top: -250px; font-size: 5em; font-weight: bold;">
+    <input autofocus required name="remainder" type="number" max="1998" style="width: 250px; background: transparent; border: none; outline: none; position: relative; left: 100px; top: -260px; font-size: 5em; font-weight: bold;">
+    <button id="button" class="btn" style="background-color: white; border-radius: 15%; font-size: larger; position: relative; left: -120px; top: -160px; width: 150px; height: 80px;">Give Answer</button>
+{% endblock %}

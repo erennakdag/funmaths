@@ -2,7 +2,6 @@ from flask import Flask, render_template, redirect, session, request
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-from random import randint
 import sqlite3
 
 from helpers import login_required, error
@@ -190,18 +189,111 @@ def division():
 @app.route("/evaluate", methods=["POST"])
 @login_required
 def evaluate():
+    """Evaluates the submitted problem and redirects to the page that the user was in
+
+    Returns:
+        [Text]: [The mode that the user is currently visiting]
+    """
+    
+    # getting the answer from the user
     answer = int(request.form.get('answer'))
+    # and the operation that they are currently making
     operation = request.form.get('operation')
     
-    compare, route = actual_answer.pop()
-    print(compare, route)
+    # the actual answer and the route that this funtion should redirect to
+    actual_answer, route = compare.pop()
+    print(actual_answer, route)
+
+    if answer == actual_answer:
         
-    if answer == compare:
-        combo[operation] = combo.get(operation, 0) + 1
+        # additional logic for the division operation
+        if operation == "divd":
+            remainder = int(request.form.get('remainder'))
+            if remainder == actual_answer.pop():
+                combo[operation] = combo.get(operation, 0) + 1
+            else:
+                combo[operation] = 0
+        else:
+            combo[operation] = combo.get(operation, 0) + 1
+            
     else:
         combo[operation] = 0
-        
+    
+    # for debug    
     print(combo.get(operation))
         
     return redirect(route)
         
+        
+# EXAM MODE
+
+@app.route("/exam")
+@login_required
+def exam():
+    """
+    
+    Generates the exam page
+    It provides the page with 12 questions, 3 for each operation, 
+    and for each question with information like the numbers, the operator, 
+    the actual answer and the color of the question. For division remainder 
+    is the additional information.
+
+    Returns:
+        [Text]: [Exam page in HTML5]
+    """
+    
+     
+    # user clicked on a button to do the exam
+    
+    questions_info = []
+    
+    # addition
+    for _ in range(3):
+        num1 = randint(0, 100)
+        num2 = randint(0, 100)
+        questions_info.append((len(questions_info), {
+            "nums": (num1, num2),
+            "answer": num1 + num2,
+            "operator": '+',
+            "color": 'aquamarine',
+        }))
+        
+    # subtraction
+    for _ in range(3):
+        num2 = randint(0, 100)
+        num1 = randint(num2, 100)
+        questions_info.append((len(questions_info), {
+            "nums": (num1, num2),
+            "answer": num1 - num2,
+            "operator": '-',
+            "color": 'yellow',
+        }))
+       
+    # multiplication 
+    for _ in range(3):
+        num1 = randint(0, 50)
+        num2 = randint(0, 20)
+        questions_info.append((len(questions_info), {
+            "nums": (num1, num2),
+            "answer": num1 * num2,
+            "operator": '×',
+            "color": 'red',
+        }))
+        
+    # division
+    for _ in range(3):
+        num1 = randint(0, 100)
+        num2 = randint(1, 15)
+        questions_info.append((len(questions_info), {
+            "nums": (num1, num2),
+            "answer": num1 // num2,
+            "remainder": num1 % num2,
+            "operator": '÷',
+            "color": 'mediumpurple',
+        }))
+       
+    # for debug 
+    print(questions_info)
+    
+    return render_template("exam.html", infos=questions_info)
+

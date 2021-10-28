@@ -1,36 +1,36 @@
-from flask import render_template, redirect, request, session
+from flask import render_template
 from random import randint
-import math
 
 
-actual_answer = []
+compare = []
 
 
-def add(correct=-1):
+def add(iscorrect=-1):
     
     num1 = randint(0, 100)
     num2 = randint(0, 100)
-    actual_answer.append((num1 + num2, '/addition'))
-    return render_template("operations_layout.html", title="Addition", correct=correct, operator="+", color='aquamarine', num1=num1, num2=num2, operation='add')
+    compare.append((num1 + num2, '/addition'))
+    return render_template("operations.html", title="Addition", iscorrect=iscorrect, operator="+", color='aquamarine', num1=num1, num2=num2, operation='add')
 
 
-def subt(correct=-1):
+def subt(iscorrect=-1):
     
     num2 = randint(0, 100)
     num1 = randint(num2, 100)
-    actual_answer.append((num1 - num2, '/subtraction'))
-    return render_template("operations_layout.html", title="Addition", correct=correct, operator="-", color='yellow', num1=num1, num2=num2, operation='subt')
+    compare.append((num1 - num2, '/subtraction'))
+    return render_template("operations.html", title="Addition", iscorrect=iscorrect, operator="-", color='yellow', num1=num1, num2=num2, operation='subt')
 
 
-def mult(correct=-1):
+def mult(iscorrect=-1):
     num1 = randint(0, 50)
     num2 = randint(0, 20)
-    actual_answer.append((num1 * num2, '/multiplication'))
-    return render_template("operations_layout.html", title="Multiplication", correct=correct, operator="×", color='red', num1=num1, num2=num2, operation='mult')
+    compare.append((num1 * num2, '/multiplication'))
+    return render_template("operations.html", title="Multiplication", iscorrect=iscorrect, operator="×", color='red', num1=num1, num2=num2, operation='mult')
 
 
-def divd(correct=-1):
+def divd(iscorrect=-1):
     num1 = randint(0, 100)
-    num2 = randint(1, 20)
-    actual_answer.append((num1 // num2, '/division'))
-    return render_template("operations_layout.html", title="Division", correct=correct, operator="÷", color='mediumpurple', num1=num1, num2=num2, operation='divd')
+    num2 = randint(1, 15)
+    compare.append(num1 % num2)
+    compare.append((num1 // num2, '/division'))
+    return render_template("divd.html", title="Division", iscorrect=iscorrect, operator="÷", color='mediumpurple', num1=num1, num2=num2, operation='divd')
