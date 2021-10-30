@@ -1,6 +1,12 @@
+/*
+* CSS for the operation symbol design on the index page
+*/
+
 #symbols {
+    width: fit-content;
+    margin: auto;
     position: relative;
-    left: 280px;
+    left: -130px;
 }
 
 .symbol {

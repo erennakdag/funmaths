@@ -34,9 +34,8 @@ db = save.cursor()
 
 
 @app.route("/")
-@login_required
 def index():
-    # TODO
+    """ Index page """
     return render_template("index.html")
 
 
@@ -209,7 +208,7 @@ def evaluate():
         # additional logic for the division operation
         if operation == "divd":
             remainder = int(request.form.get('remainder'))
-            if remainder == actual_answer.pop():
+            if remainder == compare.pop():
                 combo[operation] = combo.get(operation, 0) + 1
             else:
                 combo[operation] = 0
